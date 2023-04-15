@@ -10,12 +10,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-#COPY ["nuget.config", "api-gateway/src/ProjectManagement.ApiGateway/"]
 COPY ["ProjectManagement.ApiGateway.csproj", "api-gateway/src/ProjectManagement.ApiGateway/"]
 RUN dotnet restore "api-gateway/src/ProjectManagement.ApiGateway/ProjectManagement.ApiGateway.csproj"
 WORKDIR "/src/api-gateway/src/ProjectManagement.ApiGateway"
 COPY . .
-
 RUN dotnet build "ProjectManagement.ApiGateway.csproj" -c Release -o /app/build
 
 FROM build AS publish

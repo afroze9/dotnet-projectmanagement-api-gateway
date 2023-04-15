@@ -10,6 +10,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.3"/>
         <PackageReference Include="Ocelot" Version="18.0.0"/>
         <PackageReference Include="Ocelot.Provider.Consul" Version="18.0.0"/>
+        <PackageReference Include="Winton.Extensions.Configuration.Consul" Version="3.3.0"/>
     </ItemGroup>
 
 </Project>
