@@ -3,6 +3,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Ocelot.Authorization;
 using Ocelot.DependencyInjection;
 using Ocelot.Provider.Consul;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using ProjectManagement.ApiGateway.Configuration;
 using Winton.Extensions.Configuration.Consul;
 
@@ -52,10 +55,44 @@ public static class DependencyInjectionExtensions
         services.TryAddSingleton<IScopesAuthorizer, DelimitedScopesAuthorizer>();
     }
 
+    private static void AddTelemetry(this IServiceCollection services, IConfiguration configuration)
+    {
+        TelemetrySettings telemetrySettings = new ();
+        configuration.GetRequiredSection(nameof(TelemetrySettings)).Bind(telemetrySettings);
+
+        services
+            .AddOpenTelemetry()
+            .WithTracing(builder =>
+                {
+                    builder
+                        .AddHttpClientInstrumentation()
+                        .AddAspNetCoreInstrumentation()
+                        .ConfigureResource(options =>
+                        {
+                            options.AddService(
+                                telemetrySettings.ServiceName,
+                                serviceVersion: telemetrySettings.ServiceVersion,
+                                autoGenerateServiceInstanceId: true);
+                        })
+                        .AddConsoleExporter()
+                        .AddOtlpExporter(options => { options.Endpoint = new Uri(telemetrySettings.Endpoint); })
+                        .SetSampler<AlwaysOnSampler>();
+                }
+            )
+            .WithMetrics(builder =>
+            {
+                builder
+                    .AddAspNetCoreInstrumentation()
+                    .AddConsoleExporter()
+                    .AddOtlpExporter(options => { options.Endpoint = new Uri(telemetrySettings.Endpoint); });
+            });
+    }
+
     public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSecurity(configuration);
         services.AddGateway();
+        services.AddTelemetry(configuration);
 
         services.AddCors(options =>
         {

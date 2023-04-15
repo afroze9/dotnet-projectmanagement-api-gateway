@@ -2,5 +2,10 @@
   "Auth0Settings": {
     "Authority": "https://teamly.us.auth0.com",
     "Audience": "projectmanagement"
+  },
+  "TelemetrySettings": {
+    "Endpoint": "http://localhost:4317",
+    "ServiceName": "api-gateway",
+    "ServiceVersion": "v1"
   }
 }
