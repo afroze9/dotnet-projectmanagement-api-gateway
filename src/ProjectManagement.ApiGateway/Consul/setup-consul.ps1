@@ -58,6 +58,11 @@ $response = Invoke-RestMethod `
     -ContentType "application/json" `
     -Body $body
 
+# Add token to ocelot.global.json
+$ocelot_global_content = Get-Content -Raw "..\Ocelot\ocelot.global.json" | ConvertFrom-Json
+$ocelot_global_content.GlobalConfiguration.ServiceDiscoveryProvider.Token = $secret_id
+$ocelot_global_content | ConvertTo-Json -Depth 10 | Set-Content "..\Ocelot\ocelot.global.json"
+
 # Add token to appsettings.json file
 $appsettings_content = Get-Content -Raw "..\appsettings.json" | ConvertFrom-Json
 $appsettings_content.ConsulKV.Token = $secret_id
