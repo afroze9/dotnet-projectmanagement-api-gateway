@@ -1,4 +1,4 @@
-﻿{
+{
   "Auth0Settings": {
     "Authority": "https://teamly.us.auth0.com",
     "Audience": "projectmanagement"
