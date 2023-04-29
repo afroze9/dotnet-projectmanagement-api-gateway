@@ -115,6 +115,25 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/v1/Project/{id}/Todo",
+      "DownstreamScheme": "https",
+      "UpstreamPathTemplate": "/api/v1/Project/{id}/Todo",
+      "UpstreamHttpMethod": [
+        "Post"
+      ],
+      "ServiceName": "project-api",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "DangerousAcceptAnyServerCertificateValidator": true,
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Auth0",
+        "AllowedScopes": [
+          "write:project"
+        ]
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/v1/Todo/{id}",
       "DownstreamScheme": "https",
       "UpstreamPathTemplate": "/api/v1/Todo/{id}",
