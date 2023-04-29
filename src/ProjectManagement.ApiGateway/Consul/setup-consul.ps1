@@ -1,4 +1,5 @@
-# $token = kubectl get secrets/consul-bootstrap-acl-token --template='{{.data.token | base64decode }}' --namespace consul
+param($tokenResult)
+
 $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
 $headers.Add("X-Consul-Token", "$token")
 
@@ -69,3 +70,5 @@ $appsettings_content.ConsulKV.Token = $secret_id
 $appsettings_content | ConvertTo-Json -Depth 10 | Set-Content "..\appsettings.json"
 
 Write-Host "Key updated successfully."
+
+Set-Variable -Name $tokenResult -Value $secret_id -Scope 1
