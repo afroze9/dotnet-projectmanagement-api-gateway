@@ -50,6 +50,11 @@ $secret_id = $response.SecretID
 echo "Service Name: $service_name"
 echo "Token: $secret_id"
 
+$body = Get-Content -Raw -Path "app-config.json" | ConvertFrom-Json
+$body.Consul.Token = $secret_id
+$body.TelemetrySettings.Endpoint = "http://localhost:4317"
+$body | ConvertTo-Json -Depth 10 | Set-Content -Path "app-config.json"
+
 $body = Get-Content -Raw -Path "app-config.json"
 
 $response = Invoke-RestMethod `
@@ -61,11 +66,13 @@ $response = Invoke-RestMethod `
 
 # Add token to ocelot.global.json
 $ocelot_global_content = Get-Content -Raw "..\Ocelot\ocelot.global.json" | ConvertFrom-Json
+$ocelot_global_content.GlobalConfiguration.ServiceDiscoveryProvider.Host = "localhost"
 $ocelot_global_content.GlobalConfiguration.ServiceDiscoveryProvider.Token = $secret_id
 $ocelot_global_content | ConvertTo-Json -Depth 10 | Set-Content "..\Ocelot\ocelot.global.json"
 
 # Add token to appsettings.json file
 $appsettings_content = Get-Content -Raw "..\appsettings.json" | ConvertFrom-Json
+$appsettings_content.ConsulKV.Url = "http://localhost:8500"
 $appsettings_content.ConsulKV.Token = $secret_id
 $appsettings_content | ConvertTo-Json -Depth 10 | Set-Content "..\appsettings.json"
 
