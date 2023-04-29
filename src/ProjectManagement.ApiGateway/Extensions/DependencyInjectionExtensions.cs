@@ -7,6 +7,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using ProjectManagement.ApiGateway.Configuration;
+using Steeltoe.Discovery.Client;
 using Winton.Extensions.Configuration.Consul;
 
 namespace ProjectManagement.ApiGateway.Extensions;
@@ -90,6 +91,7 @@ public static class DependencyInjectionExtensions
 
     public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddDiscoveryClient(configuration);
         services.AddSecurity(configuration);
         services.AddGateway();
         services.AddTelemetry(configuration);

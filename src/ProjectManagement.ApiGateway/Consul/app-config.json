@@ -7,5 +7,16 @@
     "Endpoint": "http://localhost:4317",
     "ServiceName": "api-gateway",
     "ServiceVersion": "v1"
+  },
+  "Consul": {
+    "Token": "fb961be9-f765-c9db-85f6-06570dfbe4d5",
+    "Discovery": {
+      "ServiceName": "api-gateway",
+      "Scheme": "https",
+      "Retry": {
+        "Enabled": true,
+        "MaxAttempts": 5
+      }
+    }
   }
 }
