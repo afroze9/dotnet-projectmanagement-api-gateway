@@ -9,7 +9,7 @@
     "ServiceVersion": "v1"
   },
   "Consul": {
-    "Token": "6dfcd016-344e-f732-5cb5-d9141e0c577b",
+    "Token": "b1dd3b57-b1aa-2ded-2ac4-859f5a8b2082",
     "Discovery": {
       "ServiceName": "api-gateway",
       "Scheme": "https",
