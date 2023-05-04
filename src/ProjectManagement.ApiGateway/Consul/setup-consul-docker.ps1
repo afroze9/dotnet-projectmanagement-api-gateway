@@ -9,7 +9,7 @@ $service_name = "api-gateway"
 
 $body = @{
     Name = "$policy_name"
-    Description = "Policy for api-gateway key prefix"
+    Description = "Policy for $service_name key prefix"
     Rules = $rules
 } | ConvertTo-Json
 
