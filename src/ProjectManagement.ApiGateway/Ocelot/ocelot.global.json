@@ -2,9 +2,9 @@
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:7068",
     "ServiceDiscoveryProvider": {
-      "Host": "localhost",
+      "Host": "consul-server1",
       "Port": 8500,
-      "Token": "c5a9b039-d639-3f32-9aea-048d7dc3a8f3",
+      "Token": "1e5db52a-9090-3c72-dc79-6b59c20ffdab",
       "Type": "Consul"
     }
   }

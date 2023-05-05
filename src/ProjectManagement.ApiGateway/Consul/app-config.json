@@ -4,12 +4,12 @@
     "Audience": "projectmanagement"
   },
   "TelemetrySettings": {
-    "Endpoint": "http://localhost:4317",
+    "Endpoint": "http://jaeger:4317",
     "ServiceName": "api-gateway",
     "ServiceVersion": "v1"
   },
   "Consul": {
-    "Token": "c5a9b039-d639-3f32-9aea-048d7dc3a8f3",
+    "Token": "1e5db52a-9090-3c72-dc79-6b59c20ffdab",
     "Discovery": {
       "ServiceName": "api-gateway",
       "Scheme": "https",
