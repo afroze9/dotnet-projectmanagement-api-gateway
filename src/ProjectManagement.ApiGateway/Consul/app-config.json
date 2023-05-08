@@ -12,7 +12,7 @@
     "EnableConsoleExporter": false
   },
   "Consul": {
-    "Token": "c73b1d17-ffda-0306-8974-0386d1256268",
+    "Token": "517597e5-51fc-52b1-ed29-faf052e8edb8",
     "Discovery": {
       "ServiceName": "api-gateway",
       "Scheme": "https",

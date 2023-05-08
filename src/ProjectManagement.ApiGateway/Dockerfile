@@ -5,16 +5,18 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["src/ProjectManagement.ApiGateway/ProjectManagement.ApiGateway.csproj", "src/ProjectManagement.ApiGateway/nuget.config", "src/ProjectManagement.ApiGateway/"]
-RUN dotnet restore "src/ProjectManagement.ApiGateway/ProjectManagement.ApiGateway.csproj"
-COPY . .
-WORKDIR "/src/src/ProjectManagement.ApiGateway"
-RUN dotnet build "ProjectManagement.ApiGateway.csproj" -c Release -o /app/build
+COPY ["src/ProjectManagement.ApiGateway/ProjectManagement.ApiGateway.csproj", "./"]
+COPY ["src/ProjectManagement.ApiGateway/nuget.config", "./"]
+RUN dotnet restore --configfile nuget.config "ProjectManagement.ApiGateway.csproj"
 
-FROM build AS publish
-RUN dotnet publish "ProjectManagement.ApiGateway.csproj" -c Release -o /app/publish /p:UseAppHost=false
+COPY ["src/ProjectManagement.ApiGateway/*", "./"]
+RUN dotnet build -c Release -o /app/build --no-restore "ProjectManagement.ApiGateway.csproj"
 
-FROM base AS final
+FROM build as publish
+RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false --no-restore "ProjectManagement.ApiGateway.csproj"
+
+FROM base as final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY src/ProjectManagement.ApiGateway/Ocelot /app/Ocelot
 ENTRYPOINT ["dotnet", "ProjectManagement.ApiGateway.dll"]
