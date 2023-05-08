@@ -6,16 +6,34 @@
   "TelemetrySettings": {
     "Endpoint": "http://jaeger:4317",
     "ServiceName": "api-gateway",
-    "ServiceVersion": "v1"
+    "ServiceVersion": "v1",
+    "EnableAlwaysOnSampler": false,
+    "SampleProbability": 0.2,
+    "EnableConsoleExporter": false
   },
   "Consul": {
-    "Token": "1e5db52a-9090-3c72-dc79-6b59c20ffdab",
+    "Token": "c73b1d17-ffda-0306-8974-0386d1256268",
     "Discovery": {
       "ServiceName": "api-gateway",
       "Scheme": "https",
       "Retry": {
         "Enabled": true,
         "MaxAttempts": 5
+      }
+    }
+  },
+  "management": {
+    "endpoints": {
+      "health": {
+        "showdetails": "always"
+      },
+      "enabled": true,
+      "actuator": {
+        "exposure": {
+          "include": [
+            "*"
+          ]
+        }
       }
     }
   }

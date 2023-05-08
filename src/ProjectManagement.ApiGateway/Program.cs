@@ -1,4 +1,3 @@
-using Ocelot.Middleware;
 using ProjectManagement.ApiGateway.Extensions;
 
 namespace ProjectManagement.ApiGateway;
@@ -14,8 +13,8 @@ public class Program
         WebApplication app = builder.Build();
         app.UseCors("AllowAll");
         app.UseAuthentication();
-        app.UseOcelot().Wait();
-
+        app.UseRouting();
+        app.UseCustomOcelot().Wait();
         app.Run();
     }
 }

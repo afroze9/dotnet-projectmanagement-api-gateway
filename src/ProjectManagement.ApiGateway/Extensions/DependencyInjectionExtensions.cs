@@ -8,27 +8,35 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using ProjectManagement.ApiGateway.Configuration;
 using Steeltoe.Discovery.Client;
-using Winton.Extensions.Configuration.Consul;
+using Steeltoe.Management.Endpoint;
+using Steeltoe.Management.Endpoint.Health;
+using Steeltoe.Management.Endpoint.Info;
+using Steeltoe.Management.Endpoint.Refresh;
 
 namespace ProjectManagement.ApiGateway.Extensions;
 
 public static class DependencyInjectionExtensions
 {
-    public static void AddConsulKv(this IConfigurationBuilder builder, ConsulKVSettings settings)
+    private static void AddActuators(this IServiceCollection services, IConfiguration configuration)
     {
-        builder.AddConsul(settings.Key, options =>
-        {
-            options.ConsulConfigurationOptions = config =>
-            {
-                config.Address = new Uri(settings.Url);
-                config.Token = settings.Token;
-            };
-
-            options.Optional = false;
-            options.ReloadOnChange = true;
-        });
+        services.AddHealthActuator(configuration);
+        services.AddInfoActuator(configuration);
+        services.AddHealthChecks();
+        services.AddRefreshActuator();
+        services.ActivateActuatorEndpoints();
     }
 
+    // Github Issue: https://github.com/ThreeMammals/Ocelot/issues/913
+    private static void AddGateway(this IServiceCollection services)
+    {
+        services
+            .AddOcelot()
+            .AddConsul();
+
+        services.RemoveAll<IScopesAuthorizer>();
+        services.TryAddSingleton<IScopesAuthorizer, DelimitedScopesAuthorizer>();
+    }
+    
     private static void AddSecurity(this IServiceCollection services, IConfiguration configuration)
     {
         Auth0Settings auth0Settings = new ();
@@ -44,18 +52,7 @@ public static class DependencyInjectionExtensions
             options.Audience = auth0Settings.Audience;
         });
     }
-
-    // Github Issue: https://github.com/ThreeMammals/Ocelot/issues/913
-    private static void AddGateway(this IServiceCollection services)
-    {
-        services
-            .AddOcelot()
-            .AddConsul();
-
-        services.RemoveAll<IScopesAuthorizer>();
-        services.TryAddSingleton<IScopesAuthorizer, DelimitedScopesAuthorizer>();
-    }
-
+    
     private static void AddTelemetry(this IServiceCollection services, IConfiguration configuration)
     {
         TelemetrySettings telemetrySettings = new ();
@@ -75,9 +72,21 @@ public static class DependencyInjectionExtensions
                                 serviceVersion: telemetrySettings.ServiceVersion,
                                 autoGenerateServiceInstanceId: true);
                         })
-                        .AddConsoleExporter()
-                        .AddOtlpExporter(options => { options.Endpoint = new Uri(telemetrySettings.Endpoint); })
-                        .SetSampler<AlwaysOnSampler>();
+                        .AddOtlpExporter(options => { options.Endpoint = new Uri(telemetrySettings.Endpoint); });
+
+                    if (telemetrySettings.EnableConsoleExporter)
+                    {
+                        builder.AddConsoleExporter();
+                    }
+
+                    if (telemetrySettings.EnableAlwaysOnSampler)
+                    {
+                        builder.SetSampler<AlwaysOnSampler>();
+                    }
+                    else
+                    {
+                        builder.SetSampler(new TraceIdRatioBasedSampler(telemetrySettings.SampleProbability));
+                    }
                 }
             )
             .WithMetrics(builder =>
@@ -91,6 +100,7 @@ public static class DependencyInjectionExtensions
 
     public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddActuators(configuration);
         services.AddDiscoveryClient(configuration);
         services.AddSecurity(configuration);
         services.AddGateway();
