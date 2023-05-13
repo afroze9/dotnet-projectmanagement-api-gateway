@@ -4,7 +4,7 @@
     "ServiceDiscoveryProvider": {
       "Host": "consul-server1",
       "Port": 8500,
-      "Token": "517597e5-51fc-52b1-ed29-faf052e8edb8",
+      "Token": "7fabd816-b408-6a93-2f4f-4a393b427fe8",
       "Type": "Consul"
     }
   }
