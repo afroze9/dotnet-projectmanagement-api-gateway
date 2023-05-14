@@ -1,7 +1,8 @@
-using ProjectManagement.ApiGateway.Extensions;
+﻿using ProjectManagement.ApiGateway.Extensions;
 
 namespace ProjectManagement.ApiGateway;
 
+[ExcludeFromCodeCoverage]
 public class Program
 {
     public static void Main(string[] args)

@@ -6,6 +6,7 @@ using Ocelot.Provider.Consul;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using ProjectManagement.ApiGateway.Authorization;
 using ProjectManagement.ApiGateway.Configuration;
 using Steeltoe.Discovery.Client;
 using Steeltoe.Management.Endpoint;
@@ -15,6 +16,7 @@ using Steeltoe.Management.Endpoint.Refresh;
 
 namespace ProjectManagement.ApiGateway.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class DependencyInjectionExtensions
 {
     private static void AddActuators(this IServiceCollection services, IConfiguration configuration)
@@ -36,7 +38,7 @@ public static class DependencyInjectionExtensions
         services.RemoveAll<IScopesAuthorizer>();
         services.TryAddSingleton<IScopesAuthorizer, DelimitedScopesAuthorizer>();
     }
-    
+
     private static void AddSecurity(this IServiceCollection services, IConfiguration configuration)
     {
         Auth0Settings auth0Settings = new ();
@@ -52,7 +54,7 @@ public static class DependencyInjectionExtensions
             options.Audience = auth0Settings.Audience;
         });
     }
-    
+
     private static void AddTelemetry(this IServiceCollection services, IConfiguration configuration)
     {
         TelemetrySettings telemetrySettings = new ();

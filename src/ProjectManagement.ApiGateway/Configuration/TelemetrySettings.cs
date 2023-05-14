@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace ProjectManagement.ApiGateway.Configuration;
+﻿namespace ProjectManagement.ApiGateway.Configuration;
 
 /// <summary>
 ///     Represents settings related to telemetry and distributed tracing.

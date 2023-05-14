@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace ProjectManagement.ApiGateway.Configuration;
+﻿namespace ProjectManagement.ApiGateway.Configuration;
 
 [ExcludeFromCodeCoverage]
 public class ConsulKVSettings

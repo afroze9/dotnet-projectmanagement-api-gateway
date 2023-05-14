@@ -3,7 +3,7 @@ using Ocelot.Authorization;
 using Ocelot.Infrastructure.Claims.Parser;
 using Ocelot.Responses;
 
-namespace ProjectManagement.ApiGateway;
+namespace ProjectManagement.ApiGateway.Authorization;
 
 public class DelimitedScopesAuthorizer : IScopesAuthorizer
 {
@@ -28,11 +28,6 @@ public class DelimitedScopesAuthorizer : IScopesAuthorizer
         if (!values.IsError && !values.Data.Any())
         {
             values = _claimsParser.GetValuesByClaimType(claimsPrincipal.Claims, _scope);
-        }
-
-        if (values.IsError)
-        {
-            return new ErrorResponse<bool>(values.Errors);
         }
 
         List<string> userScopes = new ();
